@@ -1,0 +1,65 @@
+<html>
+    <head>
+        <title>Physics Collision Simulator</title>
+    </head>
+    
+    <body>
+        <div style="display: block;">
+            <p style="display: inline-block;">Ball 1 Position: </p>
+            <input id="pos_1" type="text" value="-250" style="display: inline-block;">
+            <input type="range" min="-300" max="300" value="-250" class="slider" id="slider_pos_1">
+            <button type="button" id="zero_pos_1">Zero</button>
+        </div>
+        <div style="display: block;">
+            <p style="display: inline-block;">Ball 2 Position: </p>
+            <input id="pos_2" type="text" value="250" style="display: inline-block;">
+            <input type="range" min="-300" max="300" value="250" class="slider" id="slider_pos_2">
+            <button type="button" id="zero_pos_2">Zero</button>
+        </div>
+        <div style="display: block;">
+            <p style="display: inline-block;">Ball 1 Mass: </p>
+            <input id="mass_1" type="text" value="100" style="display: inline-block;">
+            <input type="range" min="1" max="1000" value="100" class="slider" id="slider_mass_1">
+            <button type="button" id="zero_mass_1">Zero</button>
+        </div>
+        <div style="display: block;">
+            <p style="display: inline-block;">Ball 2 Mass: </p>
+            <input id="mass_2" type="text" value="100" style="display: inline-block;">
+            <input type="range" min="1" max="1000" value="100" class="slider" id="slider_mass_2">
+            <button type="button" id="zero_mass_2">Zero</button>
+        </div>
+        <div style="display: block;">
+            <p style="display: inline-block;">Ball 1 Velocity: </p>
+            <input id="vel_1" type="text" value="125" style="display: inline-block;">
+            <input type="range" min="-250" max="250" value="125" class="slider" id="slider_vel_1">
+            <button type="button" id="zero_vel_1">Zero</button>
+        </div>
+        <div style="display: block;">
+            <p style="display: inline-block;">Ball 2 Velocity: </p>
+            <input id="vel_2" type="text" value="0" style="display: inline-block;">
+            <input type="range" min="-250" max="250" value="0" class="slider" id="slider_vel_2">
+            <button type="button" id="zero_vel_2">Zero</button>
+        </div>
+        <div style="display: block;">
+            <p style="display: inline-block;">Elasticity (%): </p>
+            <input id="elast" type="text" value="100" style="display: inline-block;">
+            <input type="range" min="0" max="100" value="100" class="slider" id="slider_elast">
+        </div>
+        <button type="button" id="play" style="display: inline-block;">Play</button>
+        <button type="button" id="restart" style="display: inline-block;">Restart</button>
+        <div id="canvas_container" style="width: 100%;">
+        <canvas id="collision_simulator" width="600" height="200"></canvas>
+        <p id="text_pos_1">Ball 1 Position: -250.00m</p>
+        <p id="text_pos_2">Ball 2 Position: 250m</p>
+        <p id="text_vel_1">Ball 1 Velocity: 125m/s</p>
+        <p id="text_vel_2">Ball 2 Velocity: 0m/s</p>
+        <p id="text_ke">Total Kinetic Energy: 0J</p>
+        <p id="text_mom_1">Ball 1 Momentum: 12500kg*m/s</p>
+        <p id="text_mom_2">Ball 2 Momentum: 0kg*m/s</p>
+        <p id="text_mom_3">Total Momentum: 12500kg*m/s</p>
+        </div>
+        <script src="./main.js"></script>
+    </body>
+    
+    
+</html>

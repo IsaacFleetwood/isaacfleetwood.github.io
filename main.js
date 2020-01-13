@@ -4,6 +4,7 @@ var c = document.getElementById("collision_simulator");
 //#c.height = can_cont.innerHeight;
 var dragging = false;
 var ball_drag_id = 0;
+/*
 c.addEventListener("mousedown", startDrag);
 function startDrag(event) {dragging = true;}
 c.addEventListener("mousemove", drag);
@@ -15,6 +16,7 @@ function drag(event)
 }
 c.addEventListener("mouseup", endDrag);
 function endDrag(event) {dragging = false;}
+*/
 var pos_1 = document.getElementById("pos_1");
 var pos_2 = document.getElementById("pos_2");
 var vel_1 = document.getElementById("vel_1");

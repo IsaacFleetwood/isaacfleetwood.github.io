@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html
+>
+
+<head>
+
+<title>Timeline</title>
+<meta charset="utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet"> 
+
+<script>
+var canvas;
+var out;
+var out2;
+var id;
+var ctx;
+var int = 0;
+var width = 100;
+var dragging = false;
+var goingToward = -1;
+var clickedInside = false;
+var findGoingToward = false;
+let first_dates = [];/*[{
+	name: "Assassination of President John Kennedy",
+	date: "November 22, 1963"
+}, {
+	name: "Brown vs Board of Education",
+	date: "May 17, 1954"
+}, {
+	name: "The Feminine Mystique is published",
+	date: "February 19, 1963"
+}, {
+	name: "Cuban Missile Crisis",
+	date_start: "October 16, 1962",
+	date_end: "October 28, 1962"
+}, {
+	name: "TET Offensive",
+	date_start: "January 30, 1968",
+	date_end: "September 23, 1968"
+}, {
+	name: "WATTS Riot",
+	date_start: "August 11, 1965",
+	date_end: "August 17, 1965"
+}, {
+	name: "Assassination of Malcolm X",
+	date: "February 21, 1965"
+}, {
+	name :"Massacre at My Lai",
+	date: "March 16, 1968"
+}, {
+	name: "Founding conference for NOW",
+	date: "June 30, 1966"
+}, {
+	name: "Freedom Riders begin routes",
+	date: "May 4, 1961"
+}, {
+	name: "John Kennedy elected",
+	date: "November 8, 1960"
+}, {
+	name: "Civil Rights Act signed by Lyndon Johnson",
+	date: "July 2, 1964"
+}, {
+	name: "March on Washington for Jobs and Freedom",
+	date: "August 28, 1963"
+}, {
+	name: "Equal Rights Amendment passed by Congress",
+	date: "March 22, 1972"
+}, {
+	name: "Rachel Carson published Silent Spring",
+	date: "September 27, 1962"
+}, {
+	name: "Martin Luther King Jr. assassination",
+	date: "April 4, 1968"
+}, {
+	name: "First Earth Day observed",
+	date: "April 22, 1970"
+}, {
+	name: "President Richard Nixon resigns",
+	date: "August 9, 1974"
+}, {
+	name: "Title IX is passed",
+	date: "June 23, 1972"
+}, {
+	name: "Central High School in Little Rock, Arkansas integrated",
+	date: "September 3, 1957"
+}, {
+	name: "Kent State Protesters killed",
+	date: "May 4, 1970"
+}, {
+	name: "Man on the Moon",
+	date: "July 20, 1969"
+}, {
+	name: "Creation of United Farm Workers",
+	date: "1962"
+}, {
+	name: "Richard Nixon becomes President",
+	date: "January 20, 1969"
+}, {
+	name: "Roe vs Wade passed",
+	date: "January 22, 1973"
+}, {
+	name: "Wounded Knee and FBI clash",
+	date_start: "February 27, 1973",
+	date_end: "May 8, 1973"
+}, {
+	name: "Woodstock",
+	date_start: "August 15, 1969",
+	date_end: "August 18, 1969"
+}, {
+	name: "Montgomery Bus Boycotts",
+	date_start: "Dec 5, 1955",
+	date_end: "Dec 20, 1956"
+}, {
+	name: "Robert Kennedy Assassination",
+	date: "June 6, 1968"
+}, {
+	name: "March on Selma",
+	date: "March 7, 1965"
+}, {
+	name: "OPEC Oil Embargo",
+	date_start: "October 1973",
+	date_end: "March 1974"
+}, {
+	name: "Watergate Scandal",
+	date: "June 17, 1972"
+}];*/
+let custom_events = [];/*
+{'title': 'A new look at the statistical model identification', 'author': 'H. Akaike', 'date': 'Dec 1974'}
+,{'title': 'New directions in cryptography', 'author': 'W. Diffie', 'date': 'Nov 1976'}
+,{'title': 'An Algorithm for Vector Quantizer Design', 'author': 'Y. Linde', 'date': 'Jan 1980'}
+,{'title': 'Optimal decoding of linear codes for minimizing symbol error rate (Corresp.)', 'author': 'L. Bahl', 'date': 'Mar 1974'}
+,{'title': 'Low-density parity-check codes', 'author': 'R. Gallager', 'date': 'January 1962'}
+,{'title': 'A Formal Basis for the Heuristic Determination of Minimum Cost Paths', 'author': 'Peter E. Hart', 'date': 'July 1968'}
+,{'title': 'Visual pattern recognition by moment invariants', 'author': 'Ming-Kuei Hu', 'date': 'February 1962'}
+,{'title': 'Nearest neighbor pattern classification', 'author': 'T. Cover', 'date': 'January 1967'}
+,{'title': 'Capacity theorems for the relay channel', 'author': 'T. Cover', 'date': 'September 1979'}
+,{'title': 'Noiseless coding of correlated information sources', 'author': 'D. Slepian', 'date': 'July 1973'}
+,{'title': 'A universal algorithm for sequential data compression', 'author': 'J. Ziv', 'date': 'May 1977'}
+,{'title': 'Linear prediction: A tutorial review', 'author': 'J. Makhoul', 'date': 'April 1975'}
+,{'title': 'Broadcast channels with confidential messages', 'author': 'I. Csiszar', 'date': 'May 1978'}
+,{'title': 'Error bounds for convolutional codes and an asymptotically optimum decoding algorithm', 'author': 'A. Viterbi', 'date': 'April 1967'}
+,{'title': 'The rate-distortion function for source coding with side information at the decoder', 'author': 'A. Wyner', 'date': 'Jan 1976'}
+,{'title': 'Maximum-likelihood sequence estimation of digital sequences in the presence of intersymbol interference', 'author': 'G. Forney', 'date': 'May 1972'}
+,{'title': 'Compression of individual sequences via variable-rate coding', 'author': 'J. Ziv', 'date': 'September 1978'}
+,{'title': 'The estimation of the gradient of a density function, with applications in pattern recognition', 'author': 'K. Fukunaga', 'date': 'January 1975'}
+,{'title': 'An introduction to observers', 'author': 'D. Luenberger', 'date': 'Dec 1971'}
+,{'title': 'On the Complexity of Finite Sequences', 'author': 'A. Lempel', 'date': 'Jan 1976'}
+,{'title': 'Single tone parameter estimation from discrete-time observations', 'author': 'D. Rife', 'date': 'Sep 1974'}
+,{'title': 'Quantizing for minimum distortion', 'author': 'J. Max', 'date': 'March 1960'}
+,{'title': 'The Gaussian wire-tap channel', 'author': 'S. Leung-Yan-Cheong', 'date': 'July 1978'}
+,{'title': 'Shift-register synthesis and BCH decoding', 'author': 'J. Massey', 'date': 'Jan 1969'}
+,{'title': 'Approximating discrete probability distributions with dependence trees', 'author': 'C. Chow', 'date': 'May 1968'}
+,{'title': 'Polyphase codes with good periodic correlation properties (Corresp.)', 'author': 'D. Chu', 'date': 'July 1972'}
+,{'title': 'The condensed nearest neighbor rule (Corresp.)', 'author': 'P. Hart', 'date': 'May 1968'}
+,{'title': 'Broadcast channels', 'author': 'T. Cover', 'date': 'Jan 1972'},
+{'title': 'The Divergence and Bhattacharyya Distance Measures in Signal Selection', 'author': 'T. Kailath', 'date': 'February 1967'},
+{'title': 'On the mean accuracy of statistical pattern recognizers', 'author': 'G. Hughes', 'date': 'January 1968'},
+{'title': 'A Method for the Construction of Minimum-Redundancy Codes', 'author':'David A. Huffman', 'date':'September 1952'}
+];
+*/
+let events = [{"date":"November 22, 1963","dateX":7752,"title":"Assassination of President John Kennedy","score":50,"name":"Assassination of President John Kennedy","x":7364.75120331264,"width":108.67500305175781,"y":-1479.24572355291,"height":18},{"date":"May 17, 1954","dateX":2443.5,"title":"Brown vs Board of Education","score":50,"name":"Brown vs Board of Education","x":2473.566360473633,"width":78.625,"y":884.9245118417898,"height":18},{"date":"February 19, 1963","dateX":7329,"title":"The Feminine Mystique is published","score":50,"name":"The Feminine Mystique is published","x":7037.046244599334,"width":96.42500305175781,"y":792.7450480522733,"height":18},{"date":"October 16, 1962 - October 28, 1962","dateX":7147.5,"xStart":7138.5,"title":"Cuban Missile Crisis","score":50,"height":18,"date_end":"October 28, 1962","date_start":"October 16, 1962","xEnd":7156.5,"name":"Cuban Missile Crisis","x":7423.887596304452,"width":91.3499984741211,"y":152.9478377705912},{"date":"January 30, 1968 - September 23, 1968","dateX":10269.75,"xStart":10089,"title":"TET Offensive","score":50,"height":18,"date_end":"September 23, 1968","date_start":"January 30, 1968","xEnd":10450.5,"name":"TET Offensive","x":10980.117775342338,"width":99.8499984741211,"y":-2768.9716851944027},{"date":"August 11, 1965 - August 17, 1965","dateX":8716.5,"xStart":8712,"title":"WATTS Riot","score":50,"height":18,"date_end":"August 17, 1965","date_start":"August 11, 1965","xEnd":8721,"name":"WATTS Riot","x":7983.356384263612,"width":83.67500305175781,"y":384.45216382265744},{"date":"February 21, 1965","dateX":8448,"title":"Assassination of Malcolm X","score":50,"name":"Assassination of Malcolm X","x":8812.788328144608,"width":73.4749984741211,"y":-973.4719909560981,"height":18},{"date":"March 16, 1968","dateX":10161,"title":"Massacre at My Lai","score":50,"name":"Massacre at My Lai","x":9419.876917073432,"width":52.974998474121094,"y":-1621.983811007531,"height":18},{"date":"June 30, 1966","dateX":9205.5,"title":"Founding conference for NOW","score":50,"name":"Founding conference for NOW","x":7957.633681368938,"width":83.07499694824219,"y":1246.1627107942372,"height":18},{"date":"May 4, 1961","dateX":6330,"title":"Freedom Riders begin routes","score":50,"name":"Freedom Riders begin routes","x":5812.586917247308,"width":79.0999984741211,"y":760.4465868398863,"height":18},{"date":"November 8, 1960","dateX":6057,"title":"John Kennedy elected","score":50,"name":"John Kennedy elected","x":5090.411607696657,"width":61.92499923706055,"y":1325.7244731770757,"height":18},{"date":"July 2, 1964","dateX":8094,"title":"Civil Rights Act signed by Lyndon Johnson","score":50,"name":"Civil Rights Act signed by Lyndon Johnson","x":8043.46773196554,"width":111.9749984741211,"y":-1965.188868747622,"height":18},{"date":"August 28, 1963","dateX":7621.5,"title":"March on Washington for Jobs and Freedom","score":50,"name":"March on Washington for Jobs and Freedom","x":6574.912771586112,"width":117.7249984741211,"y":-1132.8253587605732,"height":18},{"date":"March 22, 1972","dateX":12402,"title":"Equal Rights Amendment passed by Congress","score":50,"name":"Equal Rights Amendment passed by Congress","x":11788.913614007382,"width":122.57499694824219,"y":-811.0027801702001,"height":18},{"date":"September 27, 1962","dateX":7108.5,"title":"Rachel Carson published Silent Spring","score":50,"name":"Rachel Carson published Silent Spring","x":5973.0494656760275,"width":101.69999694824219,"y":-1941.507837673861,"height":18},{"date":"April 4, 1968","dateX":10189.5,"title":"Martin Luther King Jr. assassination","score":50,"name":"Martin Luther King Jr. assassination","x":9554.81666697777,"width":94.9000015258789,"y":-3418.3692316090287,"height":18},{"date":"April 22, 1970","dateX":11332.5,"title":"First Earth Day observed","score":50,"name":"First Earth Day observed","x":11477.708103114584,"width":67.4000015258789,"y":-382.22485876142696,"height":18},{"date":"August 9, 1974","dateX":13731,"title":"President Richard Nixon resigns","score":50,"name":"President Richard Nixon resigns","x":14117.843235307533,"width":85.92500305175781,"y":-2682.7023284332417,"height":18},{"date":"June 23, 1972","dateX":12543,"title":"Title IX is passed","score":50,"name":"Title IX is passed","x":12900.412205369927,"width":46.67499923706055,"y":-329.8052192754403,"height":18},{"date":"September 3, 1957","dateX":4282.5,"title":"Central High School in Little Rock, Arkansas integrated","score":50,"name":"Central High School in Little Rock, Arkansas integrated","x":2911.336557290475,"width":142.35000610351562,"y":-653.6743773910891,"height":18},{"date":"May 4, 1970","dateX":11352,"title":"Kent State Protesters killed","score":50,"name":"Kent State Protesters killed","x":11428.976045759196,"width":73.5250015258789,"y":573.9107743261536,"height":18},{"date":"July 20, 1969","dateX":10911,"title":"Man on the Moon","score":50,"name":"Man on the Moon","x":11115.057525246677,"width":50.349998474121094,"y":-593.0682179869549,"height":18},{"date":"1962","dateX":6696,"title":"Creation of United Farm Workers","score":50,"name":"Creation of United Farm Workers","x":5810.982241894717,"width":88.375,"y":-844.6690033231052,"height":18},{"date":"January 20, 1969","dateX":10632,"title":"Richard Nixon becomes President","score":50,"name":"Richard Nixon becomes President","x":10691.290119249901,"width":91.0250015258789,"y":1157.6616141915538,"height":18},{"date":"January 22, 1973","dateX":12867,"title":"Roe vs Wade passed","score":50,"name":"Roe vs Wade passed","x":12826.367775711567,"width":57.099998474121094,"y":2645.421055449331,"height":18},{"date":"February 27, 1973 - May 8, 1973","dateX":12976.5,"xStart":12921,"title":"Wounded Knee and FBI clash","score":50,"height":18,"date_end":"May 8, 1973","date_start":"February 27, 1973","xEnd":13032,"name":"Wounded Knee and FBI clash","x":13213.665189918569,"width":80.57499694824219,"y":2258.123641242329},{"date":"August 15, 1969 - August 18, 1969","dateX":10952.25,"xStart":10950,"title":"Woodstock","score":50,"height":18,"date_end":"August 18, 1969","date_start":"August 15, 1969","xEnd":10954.5,"name":"Woodstock","x":10697.944618935682,"width":85.7249984741211,"y":338.49387416264926},{"date":"Dec 5, 1955 - Dec 20, 1956","dateX":3599.25,"xStart":3309,"title":"Montgomery Bus Boycotts","score":50,"height":18,"date_end":"Dec 20, 1956","date_start":"Dec 5, 1955","xEnd":3889.5,"name":"Montgomery Bus Boycotts","x":3798.70090341568,"width":72.8499984741211,"y":912.4098110681111},{"date":"June 6, 1968","dateX":10285.5,"title":"Robert Kennedy Assassination","score":50,"name":"Robert Kennedy Assassination","x":9701.637647396821,"width":82.07499694824219,"y":970.4300654625927,"height":18},{"date":"March 7, 1965","dateX":8473.5,"title":"March on Selma","score":50,"name":"March on Selma","x":9470.987021250048,"width":46.625,"y":-613.1948115720679,"height":18},{"date":"October 1973 - March 1974","dateX":13368.75,"xStart":13252.5,"title":"OPEC Oil Embargo","score":50,"height":18,"date_end":"March 1974","date_start":"October 1973","xEnd":13485,"name":"OPEC Oil Embargo","x":13146.353980395714,"width":70.69999694824219,"y":468.70591279319683},{"date":"June 17, 1972","dateX":12534,"title":"Watergate Scandal","score":50,"name":"Watergate Scandal","x":12527.653531437367,"width":53.70000076293945,"y":-587.3475758106639,"height":18},{"date":"Dec 1974","dateX":13903.5,"author":"H. Akaike","title":"A new look at the statistical model identification","score":50,"x":13961.088962584072,"width":127.07499694824219,"y":3305.4165317218844,"height":24},{"date":"Nov 1976","dateX":14973,"author":"W. Diffie","title":"New directions in cryptography","score":50,"x":14618.568974051483,"width":84.7750015258789,"y":394.35621302039294,"height":24},{"date":"Jan 1980","dateX":16740,"author":"Y. Linde","title":"An Algorithm for Vector Quantizer Design","score":50,"x":16807.329746246338,"width":110.42500305175781,"y":144.74644088745117,"height":24},{"date":"Mar 1974","dateX":13485,"author":"L. Bahl","title":"Optimal decoding of linear codes for minimizing symbol error rate (Corresp.)","score":50,"x":12504.11978039542,"width":196.47500610351562,"y":-1876.9205359904865,"height":24},{"date":"January 1962","dateX":6696,"author":"R. Gallager","title":"Low-density parity-check codes","score":50,"x":5333.495677064677,"width":85.07499694824219,"y":-566.858638331082,"height":24},{"date":"July 1968","dateX":10323,"author":"Peter E. Hart","title":"A Formal Basis for the Heuristic Determination of Minimum Cost Paths","score":50,"x":11578.912915542838,"width":182.97500610351562,"y":-2541.2608572308327,"height":24},{"date":"February 1962","dateX":6742.5,"author":"Ming-Kuei Hu","title":"Visual pattern recognition by moment invariants","score":50,"x":6226.396772906211,"width":127.44999694824219,"y":1120.2901438171903,"height":24},{"date":"January 1967","dateX":9486,"author":"T. Cover","title":"Nearest neighbor pattern classification","score":50,"x":8343.474224789048,"width":103.42500305175781,"y":1458.3750096752979,"height":24},{"date":"September 1979","dateX":16554,"author":"T. Cover","title":"Capacity theorems for the relay channel","score":50,"x":16676.673158168793,"width":105.875,"y":-529.8667545410767,"height":24},{"date":"July 1973","dateX":13113,"author":"D. Slepian","title":"Noiseless coding of correlated information sources","score":50,"x":13199.059558845107,"width":132.3499984741211,"y":1717.8281220438425,"height":24},{"date":"May 1977","dateX":15252,"author":"J. Ziv","title":"A universal algorithm for sequential data compression","score":50,"x":15807.814864781567,"width":141.47500610351562,"y":1655.0589383866193,"height":24},{"date":"April 1975","dateX":14089.5,"author":"J. Makhoul","title":"Linear prediction: A tutorial review","score":50,"x":13981.5382206883,"width":91.69999694824219,"y":1191.2016700053828,"height":24},{"date":"May 1978","dateX":15810,"author":"I. Csiszar","title":"Broadcast channels with confidential messages","score":50,"x":16762.908225626674,"width":125.80000305175781,"y":1356.2603491871623,"height":24},{"date":"April 1967","dateX":9625.5,"author":"A. Viterbi","title":"Error bounds for convolutional codes and an asymptotically optimum decoding algorithm","score":50,"x":9311.554667732034,"width":231.0500030517578,"y":3398.1233802923875,"height":24},{"date":"Jan 1976","dateX":14508,"author":"A. Wyner","title":"The rate-distortion function for source coding with side information at the decoder","score":50,"x":14664.23950799348,"width":212.9499969482422,"y":1975.2942376034105,"height":24},{"date":"May 1972","dateX":12462,"author":"G. Forney","title":"Maximum-likelihood sequence estimation of digital sequences in the presence of intersymbol interference","score":50,"x":11227.646366325678,"width":272.8500061035156,"y":3713.3538510346407,"height":24},{"date":"September 1978","dateX":15996,"author":"J. Ziv","title":"Compression of individual sequences via variable-rate coding","score":50,"x":17521.409868773324,"width":159.10000610351562,"y":977.0095276138377,"height":24},{"date":"January 1975","dateX":13950,"author":"K. Fukunaga","title":"The estimation of the gradient of a density function, with applications in pattern recognition","score":50,"x":14752.711696385775,"width":236.14999389648438,"y":-932.942911315162,"height":24},{"date":"Dec 1971","dateX":12229.5,"author":"D. Luenberger","title":"An introduction to observers","score":50,"x":11398.000137842946,"width":77.375,"y":1862.5085436421773,"height":24},{"date":"Jan 1976","dateX":14508,"author":"A. Lempel","title":"On the Complexity of Finite Sequences","score":50,"x":14788.842421812993,"width":103.3499984741211,"y":-623.2509790818735,"height":24},{"date":"Sep 1974","dateX":13764,"author":"D. Rife","title":"Single tone parameter estimation from discrete-time observations","score":50,"x":13802.989770870357,"width":172.52499389648438,"y":-1201.3425859173453,"height":24},{"date":"March 1960","dateX":5673,"author":"J. Max","title":"Quantizing for minimum distortion","score":50,"x":4638.969764584619,"width":94.2249984741211,"y":275.2540305509881,"height":24},{"date":"July 1978","dateX":15903,"author":"S. Leung-Yan-Cheong","title":"The Gaussian wire-tap channel","score":50,"x":15685.319324493408,"width":83.32499694824219,"y":-339.8608667634808,"height":24},{"date":"Jan 1969","dateX":10602,"author":"J. Massey","title":"Shift-register synthesis and BCH decoding","score":50,"x":10457.226244463029,"width":112,"y":-1107.5260144972428,"height":24},{"date":"May 1968","dateX":10230,"author":"C. Chow","title":"Approximating discrete probability distributions with dependence trees","score":50,"x":9674.890283292683,"width":185.6750030517578,"y":1391.7010501027553,"height":24},{"date":"July 1972","dateX":12555,"author":"D. Chu","title":"Polyphase codes with good periodic correlation properties (Corresp.)","score":50,"x":11851.603430226722,"width":176.97500610351562,"y":3363.1374325402458,"height":24},{"date":"May 1968","dateX":10230,"author":"P. Hart","title":"The condensed nearest neighbor rule (Corresp.)","score":50,"x":10280.117822713586,"width":125.05000305175781,"y":-3131.6222630623106,"height":24},{"date":"Jan 1972","dateX":12276,"author":"T. Cover","title":"Broadcast channels","score":50,"x":11998.932751418208,"width":55.45000076293945,"y":2172.267622804683,"height":24},{"date":"February 1967","dateX":9532.5,"author":"T. Kailath","title":"The Divergence and Bhattacharyya Distance Measures in Signal Selection","score":50,"x":8491.379766433423,"width":190.10000610351562,"y":1792.7701473060604,"height":24},{"date":"January 1968","dateX":10044,"author":"G. Hughes","title":"On the mean accuracy of statistical pattern recognizers","score":50,"x":8537.284341979717,"width":144.14999389648438,"y":-2346.0412097930694,"height":24},{"date":"September 1952","dateX":1488,"author":"David A. Huffman","title":"A Method for the Construction of Minimum-Redundancy Codes","score":50,"x":1487.7669677734375,"width":165.27499389648438,"y":1345.043526690843,"height":24}];
+function getTime(date) {
+	var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+	var alts = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+	var parts = date.split(" ");
+	if(parts.length == 1) {
+		return 31*12*(parseInt(parts[0])-1950);
+	}
+	if(parts.length == 2) {
+		var i = months.findIndex(element => element==parts[0]);
+		if(i == -1) i = alts.findIndex(element => element==parts[0]);
+		if(i == -1) console.log("Error "+parts[0]);
+		return 31*i+(31*12*(parseInt(parts[1])-1950));
+	}
+	var i = months.findIndex(element => element==parts[0]);
+	if(i == -1) i = alts.findIndex(element => element==parts[0]);
+	if(i == -1) console.log("Error "+parts[0]);
+	var day = parseInt(parts[1].substring(0,parts[1].length-1));
+	//console.log(day, parts[1], i)
+	return day+31*i+(31*12*(parseInt(parts[2])-1950));
+	
+}
+var scl = 1.5;
+var x = 31*12*30*0.5*scl;
+var y = 0;
+var marginMult = 0.5;
+var img;
+function init() {
+	img = document.getElementById('background');
+    canvas = document.getElementById("canvas");
+	canvas.width = window.innerWidth-10;
+	canvas.height = window.innerHeight-10;
+    canvasWidth = canvas.width;
+    canvasHeight = canvas.height;
+
+    ctx = canvas.getContext('2d');
+    id = setInterval(draw, 10);
+
+	for(var i = 0; i < first_dates.length; i++) {
+		//console.log("help");
+		if(first_dates[i].date != null) {
+			first_dates[i].x = getTime(first_dates[i].date)*scl;
+			first_dates[i].dateX = first_dates[i].x;
+		} else {
+			first_dates[i].x = (getTime(first_dates[i].date_start)+getTime(first_dates[i].date_end))*0.5*scl;
+			first_dates[i].xStart = getTime(first_dates[i].date_start)*scl;
+			first_dates[i].xEnd = getTime(first_dates[i].date_end)*scl;
+			first_dates[i].dateX = first_dates[i].x;
+			first_dates[i].date = first_dates[i].date_start + " - " + first_dates[i].date_end;
+		}
+		var h = (canvas.height/canvas.width)*(31*12*30);
+		first_dates[i].y = h*Math.random()*0.6-h*0.3;
+		first_dates[i].score = 100;
+		first_dates[i].title = first_dates[i].name;
+		events.push(first_dates[i]);
+	}
+	for(var i = 0; i < custom_events.length; i++) {
+		//console.log("help");
+		if(custom_events[i].date != null) {
+			custom_events[i].x = getTime(custom_events[i].date)*scl;
+			custom_events[i].dateX = custom_events[i].x;
+		}
+		var h = (canvas.height/canvas.width)*(31*12*30);
+		custom_events[i].y = h*Math.random()*0.6-h*0.3;
+		custom_events[i].score = 100;
+		custom_events[i].title;
+		events.push(custom_events[i]);
+	}
+	for(var i = 0; i < events.length; i++) {
+		if(events[i].date_start != null) {
+			events[i].dateX = (getTime(events[i].date_start)+getTime(events[i].date_end))*0.5*scl;
+		} else {
+			events[i].dateX = getTime(events[i].date)*scl;
+		}
+	}
+	zoom = canvas.width/(31*30*12);
+}
+function cUX(x) {
+	return (x - centerX) * zoom + canvasWidth / 2;
+}
+function cUY(y) {
+	return (y - centerY) * zoom + canvasHeight / 2;
+}
+function getInverseX(x) {
+	return (x-canvasWidth/2) / zoom + centerX;
+}
+function getInverseY(y) {
+	return (y-canvasHeight/2) / zoom + centerY;
+}
+var frameCount = 0;
+function draw() {
+	frameCount += 1;
+	if(frameCount % 1000 == 0) {
+		console.log(JSON.stringify(events));
+	}
+	canvas.width = window.innerWidth-10;
+	canvas.height = window.innerHeight-10;
+    canvasWidth = canvas.width;
+    canvasHeight = canvas.height;
+    ctx.fillStyle = "#FFFFFF";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#000000";
+	//document.getElementById("output").innerHTML = ""+JSON.stringify(events);
+    ctx.strokeStyle = "#000000";
+    ctx.beginPath();
+    var r = zoom;
+    //ctx.arc(r/2-x, r/2-y, r, 0, Math.PI*2, true);
+    //ctx.fill();
+    w = 50
+    h = 10
+    centerX = x + canvasWidth / 2
+    centerY = y + canvasHeight / 2
+	var minX = cUX(-31*12*10);
+	var maxX = cUX(31*12*40*scl);
+	var minY = cUY(-img.height*scl*31*12*50/img.width/2)
+	var maxY = cUY(img.height*scl*31*12*50/img.width/2)
+	ctx.drawImage(img, minX, minY, maxX-minX, maxY-minY);
+    //ctx.rect((50-centerX)*r+canvasWidth/2,(0-centerY)*r+canvasHeight/2, w*r, h*r);
+    //ctx.rect((25-centerX)*r+canvasWidth/2,(50-centerY)*r+canvasHeight/2, w*r, h*r);
+	let yearCols = ['#aa0000', '#aa1700', '#aa2f00', '#aa4800', '#aa6000', '#aa7800', '#aa9000', '#aaa800', '#93aa00', '#7baa00', '#63aa00', '#4baa00', '#33aa00', '#1baa00', '#03aa00', '#00aa14', '#00aa2c', '#00aa44', '#00aa5c', '#00aa74', '#00aa8c', '#00aaa4', '#0097aa', '#007faa', '#0067aa', '#004faa', '#0037aa', '#001faa', '#0007aa', '#0f00aa', '#0f00aa'];
+    ctx.stroke();
+    for (var i = 0; i < events.length; i++) {
+        var obj = events[i];
+		var offset = 10.0;
+		if(obj.y < 0) {
+			offset = -offset;
+		}
+        var hei = obj.score * 1.2 * r;
+		ctx.beginPath();
+        ctx.font = "bold " + (obj.score * r) + "px \"Montserrat\"";
+        var maxWidth = Math.max(ctx.measureText(obj.title).width, ctx.measureText(obj.date).width);
+        obj.width = maxWidth*1+hei*marginMult*2;
+		obj.height = hei*3.0;
+        if(obj.author != null) {
+			obj.height += hei;
+		}
+		
+		ctx.beginPath();
+		ctx.lineWidth = 5;
+		var yM = 1.0;
+		var yH = 0.0;
+		if(obj.y < 0) {
+			yM = -1.0;
+			yH = obj.height;
+		}
+		var lastHei = 0;
+		if(obj.date_start != null) {
+			ctx.moveTo((obj.xStart - centerX) * r + canvasWidth / 2, (0*yM - centerY) * r + canvasHeight / 2+offset);
+			ctx.lineTo((obj.xStart - centerX) * r + canvasWidth / 2, (50*yM - centerY) * r + canvasHeight / 2+offset);
+			ctx.lineTo((obj.xEnd - centerX) * r + canvasWidth / 2, (50*yM - centerY) * r + canvasHeight / 2+offset);
+			ctx.lineTo((obj.xEnd - centerX) * r + canvasWidth / 2, (0*yM - centerY) * r + canvasHeight / 2+offset);
+			lastHei = 50;
+		}
+		ctx.moveTo(cUX(obj.x)+obj.width/2, cUY(obj.y)+yH+offset);
+		ctx.lineTo(cUX(obj.x)+obj.width/2, cUY(obj.y/2.0)+yH/2.0+offset);
+		ctx.lineTo(cUX(obj.dateX), cUY(obj.y/2.0)+yH/2.0+offset);
+		ctx.lineTo(cUX(obj.dateX), cUY(lastHei*yM)+offset);
+		ctx.stroke();
+    }
+	for(var i = 0; i < events.length; i++) {
+        var obj = events[i];
+		var offset = 10.0;
+		if(obj.y < 0) {
+			offset = -offset;
+		}
+        var hei = obj.score * 1.2 * r;
+		ctx.beginPath();
+		ctx.fillStyle = "#FFFFFF";
+        ctx.rect(cUX(obj.x), cUY(obj.y)+offset, obj.width, obj.height);
+		ctx.fill();
+		/*
+		ctx.beginPath();
+		ctx.fillStyle = "#c95244";
+        ctx.rect(cUX(obj.x), cUY(obj.y)+offset, obj.width, 1);
+        ctx.fill();
+		*/
+		//ctx.stroke();
+		ctx.beginPath();
+		ctx.fillStyle = yearCols[Math.floor(obj.dateX/(scl*31*12))];
+		ctx.rect(cUX(obj.x), cUY(obj.y)+obj.height-hei*1.2+offset, obj.width, hei*1.2);
+		ctx.fill();
+		ctx.beginPath();
+		ctx.fillStyle = "#000000";
+        ctx.font = "bold " + (obj.score * r) + "px \"Montserrat\"";
+        ctx.fillText(obj.title, cUX(obj.x)+hei*marginMult, cUY(obj.y)+hei+offset+hei*0.3);
+        if(obj.author != null) {
+			ctx.fillText("Written by: " +obj.author, cUX(obj.x)+hei*marginMult, cUY(obj.y)+hei*2+hei*0.4+offset);
+		}
+		ctx.beginPath();
+		ctx.fillStyle = "#FFFFFF";
+		ctx.font = "italic " + (obj.score * r) + "px \"Montserrat\"";
+        ctx.fillText(obj.date, cUX(obj.x)+hei*marginMult, cUY(obj.y)+obj.height-hei*0.3+offset);
+		
+	}
+	ctx.fillStyle = "#c95244";
+	ctx.beginPath();
+	ctx.rect(0, -10+cUY(0.0), canvasWidth, 20);
+	ctx.fill();
+	ctx.beginPath();
+	var markers = [];
+	var monthDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+	var alts = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+	var minSize = 100.0;
+	console.log(zoom);
+	if(zoom > minSize) {
+		for(var i = Math.floor((-canvasWidth/2/zoom+centerX)/(12*31)); i < Math.ceil((canvasWidth/2/zoom+centerX)/(12*31)); i++) {
+			for(var j = 0; j < 12; j++) {
+				for(var k = 0; k < monthDays[j]; k++) {
+					markers.push({"time":getTime(alts[j] + " " + k + ", " + (i+1950))*scl,"date":(alts[j] + " " + k + ", " + (i+1950))});
+				}
+			}
+		}
+	} else if(zoom > minSize/4) {
+		for(var i = Math.floor((-canvasWidth/2/zoom+centerX)/(12*31)); i < Math.ceil((canvasWidth/2/zoom+centerX)/(12*31)); i++) {
+			for(var j = 0; j < 12; j++) {
+				for(var k = 0; k < monthDays[j]; k+=8) {
+					markers.push({"time":getTime(alts[j] + " " + k + ", " + (i+1950))*scl,"date":(alts[j] + " " + k + ", " + (i+1950))});
+				}
+			}
+		}
+	} else if(zoom > 1.3) {
+		for(var i = 0; i < 30; i++) {
+			for(var j = 0; j < 12; j++) {
+				markers.push({"time":getTime(alts[j] + " " + (i+1950))*scl,"date":(alts[j] + " " + (i+1950))});
+			}
+		}
+	} else if(zoom > 0.8) {
+		for(var i = 0; i < 31; i++) {
+			for(var j = 0; j < 12; j+=3) {
+				markers.push({"time":getTime(alts[j] + " " + (i+1950))*scl,"date":(alts[j] + " " + (i+1950))});
+			}
+		}
+	} else if(zoom > 0.3) {
+		for(var i = 0; i < 31; i++) {
+			for(var j = 0; j < 12; j+=6) {
+				markers.push({"time":getTime(alts[j] + " " + (i+1950))*scl,"date":(alts[j] + " " + (i+1950))});
+			}
+		}
+	} else {
+		for(var i = 0; i < 31; i++) {
+			markers.push({"time":getTime(""+(i+1950))*scl,"date":(i+1950)});
+		}
+	} /*else {
+		for(var i = 0; i < 31; i+=2) {
+			markers.push({"time":getTime(""+(i+1950))*scl,"date":(i+1950)});
+		}
+	}*/
+	ctx.beginPath();
+	ctx.fillStyle = "#000000";
+	ctx.font = "italic 18px \"Montserrat\"";
+	var minX = -canvasWidth/2 / zoom + centerX;
+	var maxX = canvasWidth/2 / zoom + centerX;
+	for(var i = 0; i < markers.length; i++) {
+		if(markers[i].time < minX || markers[i].time > maxX) continue;
+		ctx.rect(cUX(markers[i].time), -10+cUY(0.0), 1, 20);
+        ctx.fillText(markers[i].date, cUX(markers[i].time)+5, cUY(0.0)+9);
+	}
+	ctx.fill();
+	//ctx.stroke();
+	var dist = 2;
+	var power = 3.0;
+	//console.log(goingToward + " " + findGoingToward);
+	if(findGoingToward) {
+		var mouseX = getInverseX(prevX);
+		var mouseY = getInverseY(prevY);
+		goingToward = -1;
+		for(var i = 0; i < events.length; i++) {
+			//document.getElementById("output").innerHTML = mouseX + " " + mouseY + " " + events[i].x + " " + (events[i].x+getInverseX(events[i].width));
+			var objX = prevX-cUX(events[i].x);
+			var objY = prevY-cUY(events[i].y);
+			if(objX > 0 && objX < events[i].width &&
+				objY > 0 && objY < events[i].height) {
+				goingToward = i;
+				break;
+			}
+		}
+		findGoingToward = false;
+	}
+	if(goingToward >= 0) {
+		var obj = events[goingToward];
+		x += (obj.x-x-canvasWidth/2+((obj.width/2)/zoom))*0.02; // -canvasWidth/2.0 # -canvasWidth
+		y += (obj.y-y-canvasHeight/2+((obj.height/2)/zoom))*0.02;
+		zoom += (canvasWidth/(10*obj.width)-zoom)*0.01;
+	}
+
+
+	/*
+	var predictedChanges = [];
+	for(var i = 0; i < events.length; i++) {
+		var obj = events[i];
+		
+		var dX = 0.0;//(obj.dateX-obj.x-obj.width/2)*1.0;
+		var dY = 0.0;//(0-obj.y-obj.height/2)*0.1;
+		for(var j = 0; j < events.length; j++) {
+			var otherObj = events[j];
+			if(obj == otherObj) continue;
+			//var nM2 = (Math.pow(otherObj.x+otherObj.width/2-obj.x-obj.width/2, 2)+Math.pow(otherObj.y+otherObj.height/2-obj.y-obj.height/2, 2));
+			//var nM = Math.sqrt(nM2);
+			//var force = power/nM;
+			var leftDist = obj.x-otherObj.x-otherObj.width;
+			var rightDist = otherObj.x-obj.x-obj.width;
+			var topDist = otherObj.y+otherObj.height-obj.y;
+			var bottomDist = obj.y+obj.height-otherObj.y;
+			if(leftDist < padX && leftDist > -obj.width/2) {
+				if(leftDist < 0)
+					dX -= leftDist/2.0;
+				else
+					dX -= leftDist/padX*leftDist/2.0;
+			}
+			if(rightDist < padX && rightDist > -obj.width/2) {
+				if(rightDist < 0)
+					dX += rightDist/2.0;
+				else
+					dX += rightDist/padX*rightDist/2.0;
+			}
+			//dX -= otherObj.x//(otherObj.x+otherObj.width/2-obj.x-obj.width/2)*force;
+			//dY -= //(otherObj.y+otherObj.height/2-obj.y-obj.height/2)*force;
+		}
+		predictedChanges.push([dX*0.1, dY*0.1]);
+	}
+	for(var i = 0; i < events.length; i++) {
+		var obj = events[i];
+		obj.x += predictedChanges[i][0];
+		obj.y += predictedChanges[i][1];
+	}
+	*/
+	//console.log(predictedChanges);
+    //console.log(invalid);
+	//ctx.endPath();
+	//ctx.endPath();
+}
+var prevX = 0;
+var prevY = 0;
+var prevDrag = 0;
+var zoom = 0.5;
+var sensitivity = 0.05;
+var hRange = 7500;
+function mouseMove(event) {
+    if (dragging) {
+		
+        if (prevDrag) {
+			var dX = (prevX - event.clientX) / zoom;
+			x += dX;
+			var minX = getInverseX(0);
+			var maxX = getInverseX(canvasWidth);
+			if(!((minX >= -1000 && maxX <= 22000) || (dX >= 0 && minX <= -1000) || (dX <= 0 && maxX >= 22000)))
+				x -= dX;
+			var dY = (prevY - event.clientY) / zoom;
+			y += dY;
+			var minY = getInverseY(0);
+			var maxY = getInverseY(canvasHeight);
+			if(!((minY >= -hRange && maxY <= hRange) || (dY >= 0 && minY <= -hRange) || (dY <= 0 && maxY >= hRange)))
+				y -= dY;
+        }
+		movedInside = true;
+		goingToward = -1;
+		
+		/*
+		var mX = getInverseX(prevX);
+		var mY = getInverseY(prevY);
+		var lowDist = 10000;
+		var lowI = -1;
+		for(var i = 0; i < events.length; i++) {//i in range(len(events)):
+			var dist = ((events[i].x-mX)*(events[i].x-mX)+(events[i].y-mY)*(events[i].y-mY));
+			if(dist < lowDist) {
+				lowDist = dist
+				lowI = i
+			}
+		}
+		if(lowI > -1) {
+			events[lowI].x = getInverseX(event.clientX);
+			events[lowI].y = getInverseY(event.clientY);
+		}
+		*/
+    }
+	prevX = event.clientX;
+	prevY = event.clientY;
+    prevDrag = dragging;
+}
+
+function mouseDown(event) {
+    dragging = true;
+	movedInside = false;
+	findGoingToward = false;
+}
+
+function mouseUp(event) {
+    dragging = false;
+	if(!movedInside) findGoingToward = true;
+	movedInside = false;
+}
+
+function mouseWheel(event) {
+	goingToward = -1;
+    if (event.deltaY > 0) {
+        zoom = zoom / (1 + (event.deltaY * sensitivity));
+		if(zoom < 0.1) zoom = 0.1;
+        //x = x / (1+(event.deltaY * sensitivity));
+        //y = y /(1+(event.deltaY * sensitivity));
+    } else {
+        zoom = zoom * (1 + (event.deltaY * -sensitivity));
+		if(zoom < 0.1) zoom = 0.1;
+        //x = x * (1+(event.deltaY * sensitivity));
+        //y = y * (1+(event.deltaY * sensitivity));
+    }
+}
+function mouseLeave(event) {
+	dragging = false;
+}
+</script>
+
+</head>
+
+<body onload="init();"
+
+onmousemove="mouseMove(event)" 
+onmousedown="mouseDown(event)" 
+onmouseup="mouseUp(event)"
+onmouseleave="mouseLeave(event)"
+onwheel="mouseWheel(event)" 
+style = "margin:0;padding:0;">
+
+<canvas id="canvas" 
+width=500 height=500 style="margin:0;padding:0;text-align:center;">No canvas</canvas>
+<image id='background' src='./background.png' style='display: none;' width=1920 height=1080/>
+</body>
+
+</html>
